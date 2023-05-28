@@ -1,0 +1,29 @@
+{
+  "name": "selenium-webdriver-cucumber-js-example-project",
+  "version": "1.0.0",
+  "description": "This project demonstrates the usage of selenium-webdriver, cucumberjs in a Node.js project with Docker and Jenkins CI ",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akarsh/selenium-webdriver-cucumber-js-example-project.git"
+  },
+  "keywords": [
+    "selenium-webdriver",
+    "cucumber-js",
+    "dockerfile",
+    "jenkinsfile"
+  ],
+  "author": "Akarsh Seggemu",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/akarsh/selenium-webdriver-cucumber-js-example-project/issues"
+  },
+  "homepage": "https://github.com/akarsh/selenium-webdriver-cucumber-js-example-project#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^9.1.2",
+    "selenium-webdriver": "^4.9.2"
+  }
+}
