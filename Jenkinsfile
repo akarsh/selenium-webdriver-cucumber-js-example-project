@@ -19,13 +19,22 @@ pipeline {
         stage('Run test') {
             steps {
                 sh'''
+                docker rm -f $(docker ps -a -q)
+                '''
+                sh'''
+                docker network rm grid
+                '''
+                sh'''
                 docker network create grid
                 '''
                 sh'''
-                docker run -d -p 4444:4444 -p 6900:5900 --net grid --name selenium --shm-size="2g" standalone-chrome:4.9.1-20230508
+                docker pull seleniarm/hub:latest
                 '''
                 sh'''
-                docker run -d --net grid --name video -v ${PWD}/videos:/videos selenium/video:ffmpeg-4.3.1-20230421
+                docker run -d -p 4442-4444:4442-4444 --net grid --name seleniarm-hub seleniarm/hub:latest
+                '''
+                sh'''
+                docker run -d --net grid -e SE_EVENT_BUS_HOST=selenium-hub -e SE_EVENT_BUS_PUBLISH_PORT=4442 -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 -v ${PWD}/config.toml:/opt/bin/config.toml -v ${PWD}/assets:/opt/selenium/assets -v /var/run/docker.sock:/var/run/docker.sock --name selenium-node-docker selenium/node-docker:latest
                 '''
                 sh'''
                 docker build -t selenium-webdriver-cucumber-js-example-project-test --target test . 
@@ -34,10 +43,10 @@ pipeline {
                 docker run --rm -v ${PWD}:/usr/src/app/ --net grid --name selenium-webdriver-cucumber-js-example-project-test selenium-webdriver-cucumber-js-example-project-test
                 '''
                 sh'''
-                docker stop video && docker rm video
+                docker stop seleniarm-hub && docker rm seleniarm-hub
                 '''
                 sh'''
-                docker stop selenium && docker rm selenium
+                docker stop selenium-node-docker && docker rm selenium-node-docker
                 '''
                 sh'''
                 docker network rm grid
