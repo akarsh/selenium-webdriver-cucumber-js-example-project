@@ -28,13 +28,10 @@ pipeline {
                 docker network create grid
                 '''
                 sh'''
-                docker pull seleniarm/hub:latest
-                '''
-                sh'''
                 docker run -d -p 4442-4444:4442-4444 --net grid --name seleniarm-hub seleniarm/hub:latest
                 '''
                 sh'''
-                docker run -d --net grid -e SE_EVENT_BUS_HOST=selenium-hub -e SE_EVENT_BUS_PUBLISH_PORT=4442 -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 -v ${PWD}/config.toml:/opt/bin/config.toml -v ${PWD}/assets:/opt/selenium/assets -v /var/run/docker.sock:/var/run/docker.sock --name selenium-node-docker selenium/node-docker:latest
+                docker run -d --net grid -e SE_EVENT_BUS_HOST=selenium-hub -e SE_EVENT_BUS_PUBLISH_PORT=4442 -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 -v ${PWD}/config.toml:/opt/bin/config.toml -v ${PWD}/assets:/opt/selenium/assets -v /var/run/docker.sock:/var/run/docker.sock --name seleniarm-node-docker seleniarm/node-docker:latest
                 '''
                 sh'''
                 docker build -t selenium-webdriver-cucumber-js-example-project-test --target test . 
@@ -46,7 +43,7 @@ pipeline {
                 docker stop seleniarm-hub && docker rm seleniarm-hub
                 '''
                 sh'''
-                docker stop selenium-node-docker && docker rm selenium-node-docker
+                docker stop seleniarm-node-docker && docker rm seleniarm-node-docker
                 '''
                 sh'''
                 docker network rm grid
